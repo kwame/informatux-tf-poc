@@ -1,4 +1,4 @@
-# This is Development Environment  
+# This is the development environment  
 ## Components
 The components of the environment are defined in the `main.tf` file.  
 ## Global Variables

@@ -10,7 +10,6 @@ module "vpc" {
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
   enable_dns_hostnames = "${var.enable_dns_hostnames}"
   enable_nat_gateway = "${var.enable_nat_gateway}"
-  user_data = "${file("$/files/tools.sh")}"
 
   azs      = ["${var.availability_zones}"]
   tags    = { 
@@ -25,6 +24,7 @@ resource "aws_instance" "informatux_poc" {
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${aws_security_group.informatux_poc.id}"]
   subnet_id = "${module.vpc.public_subnets[0]}"
+  user_data = "${file("tools.sh")}"
   associate_public_ip_address = true
   source_dest_check = false
 
