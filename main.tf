@@ -24,7 +24,7 @@ resource "aws_instance" "informatux_poc" {
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${aws_security_group.informatux_poc.id}"]
   subnet_id = "${module.vpc.public_subnets[0]}"
-  user_data = "${file("tools.sh")}"
+  user_data = "${file("files/tools.sh")}"
   associate_public_ip_address = true
   source_dest_check = false
 

@@ -25,7 +25,8 @@ variable env_cidr {
 }
 
 variable ssh_key_name {
-  default = "informatux-slm"
+#  default = "informatux-slm"
+  default = "adi_tf_priv"
 }
 
 variable public_subnets {
