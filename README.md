@@ -1,4 +1,4 @@
-# This is the development environment  
+# This is my personal terraform development and poc environment  
 ## Components
 The components of the environment are defined in the `main.tf` file.  
 ## Global Variables
