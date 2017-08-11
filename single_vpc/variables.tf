@@ -57,6 +57,10 @@ variable "informatux_poc_instance_size" {
   default = "t2.micro"
 }
 
+variable "informatux-client_instance_size" {
+  default = "t2.micro"
+}
+
 #Amazon Linux AMI
 variable "informatux_ami" {
   default = "ami-a4c7edb2"

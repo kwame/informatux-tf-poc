@@ -69,6 +69,58 @@ resource "aws_security_group_rule" "allow_server_utility_outbound" {
 }
 
 
+resource "aws_instance" "informatux-client" {
+  ami = "${var.informatux_ami}"
+  instance_type = "${var.informatux-client_instance_size}"
+  key_name = "${var.ssh_key_name}"
+  vpc_security_group_ids = ["${aws_security_group.informatux-client.id}"]
+  subnet_id = "${module.vpc.public_subnets[0]}"
+  user_data = "${file("files/tools.sh")}"
+  associate_public_ip_address = true
+  source_dest_check = false
+
+    tags {
+        Name = "Informatux ansible client"
+    }
+}
+
+
+resource "aws_security_group" "informatux-client" {
+  name   = "${var.cluster_name}-ansible-utility-SG"
+  vpc_id = "${module.vpc.vpc_id}"
+  tags = {
+    "Terraform" = "true"
+    "Role" = "Informatux ansible client"
+    "Environment" = "${var.cluster_name}"
+    "Name" = "${var.cluster_name}-informatux-PoC-SG"
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_security_group_rule" "ansible_allow_server_utility_inbound" {
+  type              = "ingress"
+  security_group_id = "${aws_security_group.informatux-client.id}"
+
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["${var.cidr}"]
+}
+
+resource "aws_security_group_rule" "ansible_allow_server_utility_outbound" {
+  type              = "egress"
+  security_group_id = "${aws_security_group.informatux-client.id}"
+
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+
+
 output "vpc_id" {
   value = "${module.vpc.vpc_id}"
 }
