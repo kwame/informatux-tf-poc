@@ -4,4 +4,4 @@ terraform.tfstate*
 ./tfvars-complete
 .terraform*
 *.swp
-creds
+creds*
