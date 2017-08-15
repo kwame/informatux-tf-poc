@@ -6,6 +6,7 @@ They are some global variables that are available for use on any file inside thi
 
 ## Additional Resources  
 ----------
+You'll need an AWS free tier account if you want to test out this code
 
 ## Instructions 
 
