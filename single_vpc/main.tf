@@ -25,12 +25,91 @@ resource "aws_instance" "informatux_poc" {
   vpc_security_group_ids = ["${aws_security_group.informatux_poc.id}"]
   subnet_id = "${module.vpc.public_subnets[0]}"
   user_data = "${file("files/tools.sh")}"
+#  root_block_device = "${var.root_device_size}"
+  root_block_device = {
+    volume_size = 30
+    volume_type = "gp2"
+    delete_on_termination = false
+  }
   associate_public_ip_address = true
   source_dest_check = false
 
     tags {
         Name = "Informatux PoC"
     }
+}
+
+resource "aws_ebs_volume" "informatux_poc_ebs-1" {
+    availability_zone = "us-east-1a"
+    size = 50
+    type = "gp2"
+    iops = 1000
+    tags {
+        Name = "sdc"
+    }
+}
+
+resource "aws_volume_attachment" "ebs-volume-1-attachment" {
+  device_name = "/dev/sdc"
+  volume_id = "${aws_ebs_volume.informatux_poc_ebs-1.id}"
+  instance_id = "${aws_instance.informatux_poc.id}"
+}
+
+resource "aws_ebs_volume" "informatux_poc_ebs-2" {
+    availability_zone = "us-east-1a"
+    size = 50
+    type = "gp2"
+    iops = 1000
+    tags {
+        Name = "sdd"
+    }
+}
+
+resource "aws_volume_attachment" "ebs-volume-2-attachment" {
+  device_name = "/dev/sdd"
+  volume_id = "${aws_ebs_volume.informatux_poc_ebs-2.id}"
+  instance_id = "${aws_instance.informatux_poc.id}"
+}
+
+
+
+resource "aws_ebs_volume" "informatux_poc_ebs-3" {
+    availability_zone = "us-east-1a"
+    size = 4000
+    type = "gp2"
+    iops = 1000
+    tags {
+        Name = "sde"
+    }
+}
+
+resource "aws_volume_attachment" "ebs-volume-3-attachment" {
+  device_name = "/dev/sde"
+  volume_id = "${aws_ebs_volume.informatux_poc_ebs-3.id}"
+  instance_id = "${aws_instance.informatux_poc.id}"
+}
+
+
+#### Code to create 15x1 TB ebs volumes 
+
+
+resource "aws_ebs_volume" "ebs_volume_asm" {
+    availability_zone = "us-east-1a"
+    size = 1000
+    type = "gp2"
+    iops = 1000
+    count = 15
+    tags {
+        Name = "sd${element(var.devices, count.index)}"
+    }
+}
+
+
+resource "aws_volume_attachment" "ebs_volume_asm-attachment" {
+  count = 15
+  device_name = "sd${element(var.devices, count.index)}"
+  volume_id = "${aws_ebs_volume.ebs_volume_asm.*.id}"
+  instance_id = "${aws_instance.informatux_poc.id}"
 }
 
 

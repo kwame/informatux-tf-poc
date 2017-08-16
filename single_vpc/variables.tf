@@ -65,3 +65,14 @@ variable "informatux-client_instance_size" {
 variable "informatux_ami" {
   default = "ami-a4c7edb2"
 }
+
+# root block device size
+variable "root_device_size" {
+  default = "15"
+}
+
+variable "devices" {
+  description = "last letter of disk devices"
+  type = "list"
+  default = ["f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t"]
+}
